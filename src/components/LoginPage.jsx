@@ -21,7 +21,7 @@ export default function LoginPage({ onLogin }) {
   useEffect(() => {
     const current = localStorage.getItem('shiva_current_user');
     if (current) {
-      navigate('/#/hunt');
+      navigate('/hunt', { replace: true });
     }
   }, [navigate]);
 
@@ -32,7 +32,7 @@ export default function LoginPage({ onLogin }) {
     if (username === 'admin' && password === 'shiva2025') {
       localStorage.setItem('shiva_current_user', 'admin');
       onLogin?.('admin');
-      navigate('/#/admin');
+      navigate('/admin', { replace: true });
       return;
     }
 
@@ -43,7 +43,7 @@ export default function LoginPage({ onLogin }) {
     }
     localStorage.setItem('shiva_current_user', username);
     onLogin?.(username);
-    navigate('/#/hunt');
+    navigate('/hunt', { replace: true });
   };
 
   return (

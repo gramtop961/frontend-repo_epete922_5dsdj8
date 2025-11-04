@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -74,21 +74,20 @@ export default function HuntPage() {
   const [wrong, setWrong] = useState('');
   const [input, setInput] = useState('');
   const [flipped, setFlipped] = useState(false);
+  const [progress, setProgress] = useState(loadProgress());
   const audioRef = useRef(null);
 
   const currentUser = localStorage.getItem('shiva_current_user') || '';
 
   useEffect(() => {
     if (!currentUser || currentUser === 'admin') {
-      navigate('/#/login');
+      navigate('/login', { replace: true });
     }
   }, [currentUser, navigate]);
 
-  const progress = useMemo(() => loadProgress(), []);
-  const userProgress = progress[currentUser] || { idx: 0, done: [] };
   const riddles = RIDDLES[currentUser] || [];
-
   const total = riddles.length;
+  const userProgress = progress[currentUser] || { idx: 0, done: [] };
   const idx = Math.min(userProgress.idx || 0, total);
   const solved = Math.min(userProgress.done?.length || 0, total);
 
@@ -109,6 +108,7 @@ export default function HuntPage() {
         },
       };
       saveProgress(next);
+      setProgress(next);
       setTimeout(() => {
         setInput('');
         setFlipped(false);
@@ -122,7 +122,7 @@ export default function HuntPage() {
   if (!riddles.length) return null;
 
   const finished = idx >= total;
-  const progressPct = total ? Math.round(((solved) / total) * 100) : 0;
+  const progressPct = total ? Math.round((solved / total) * 100) : 0;
 
   return (
     <div>
@@ -132,7 +132,7 @@ export default function HuntPage() {
         <button
           onClick={() => {
             localStorage.removeItem('shiva_current_user');
-            navigate('/#/login');
+            navigate('/login', { replace: true });
           }}
           className="rounded border border-[#a36c3a] bg-[#f3e7c2] px-3 py-1 text-sm hover:bg-[#efdba7]"
         >

@@ -19,7 +19,7 @@ export default function AdminPage() {
 
   const currentUser = localStorage.getItem('shiva_current_user') || '';
   useEffect(() => {
-    if (currentUser !== 'admin') navigate('/#/login');
+    if (currentUser !== 'admin') navigate('/login', { replace: true });
   }, [currentUser, navigate]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function AdminPage() {
           <button
             onClick={() => {
               localStorage.removeItem('shiva_current_user');
-              navigate('/#/login');
+              navigate('/login', { replace: true });
             }}
             className="rounded border border-[#a36c3a] bg-[#f3e7c2] px-3 py-1 text-sm hover:bg-[#efdba7]"
           >
