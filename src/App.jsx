@@ -1,28 +1,37 @@
-import { useState } from 'react'
+import React from 'react';
+import { HashRouter, Routes, Route, Navigate, Link } from 'react-router-dom';
+import RetroLayout from './components/RetroLayout';
+import LoginPage from './components/LoginPage';
+import HuntPage from './components/HuntPage';
+import AdminPage from './components/AdminPage';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+function TopNav() {
+  const user = typeof window !== 'undefined' ? localStorage.getItem('shiva_current_user') : '';
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          Vibe Coding Platform
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Your AI-powered development environment
-        </p>
-        <div className="text-center">
-          <button
-            onClick={() => setCount(count + 1)}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-          >
-            Count is {count}
-          </button>
-        </div>
+    <div className="mb-4 flex items-center justify-between" style={{ fontFamily: '"Courier New", Courier, monospace' }}>
+      <div className="flex items-center gap-4 text-sm">
+        <Link to="/login" className="underline-offset-4 hover:underline">Login</Link>
+        <Link to="/hunt" className="underline-offset-4 hover:underline">Hunt</Link>
+        <Link to="/admin" className="underline-offset-4 hover:underline">Admin</Link>
       </div>
+      <div className="text-xs opacity-70">{user ? `Signed in as ${user}` : 'Not signed in'}</div>
     </div>
-  )
+  );
 }
 
-export default App
+export default function App() {
+  return (
+    <RetroLayout>
+      <HashRouter>
+        <TopNav />
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/hunt" element={<HuntPage />} />
+          <Route path="/admin" element={<AdminPage />} />
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </HashRouter>
+    </RetroLayout>
+  );
+}
